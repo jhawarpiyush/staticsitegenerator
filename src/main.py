@@ -1,62 +1,31 @@
-from htmlnode import HTMLNode, LeafNode, ParentNode
-from inline_markdown_split import extract_markdown_images, extract_markdown_links, split_nodes_delimiter, split_nodes_link, text_to_textnodes
-from textnode import TextNode, text_node_to_html_node, TextType
-from block_markdown_split import markdown_to_blocks, markdown_to_html_node
+from pathlib import Path
+import os
+import shutil
 
 
 def main():
-    # node = TextNode("This is a text node", TextType.BOLD, "https://www.boot.dev")
-    # htmlnode = HTMLNode(props={"href": "https://www.google.com","target": "_blank"})
-    # print(htmlnode.props_to_html())
+    project_root = Path(__file__).parent.parent
+    static_dir_path = project_root / "static"
+    public_dir_path = project_root / "public"
 
-    # node = ParentNode("p",[LeafNode("b", "Bold text"),LeafNode(None, "Normal text"),LeafNode("i", "italic text"),LeafNode(None, "Normal text"),LeafNode("a", "ddf", "{'a':'b'}"),],)
-    # print(node.to_html())
-    # node = TextNode("This is an image", TextType.IMAGE, "https://www.boot.dev")
-    # print(text_node_to_html_node(node))
+    if os.path.exists(public_dir_path):
+        shutil.rmtree(public_dir_path)
+    copy_directory_recursive(static_dir_path, public_dir_path)
 
-    # node = TextNode("This is text with a `code block` word", TextType.TEXT)
-    # new_nodes = split_nodes_delimiter([node], "`", TextType.CODE)
-    # print(new_nodes)
-    
-    # text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
-    # extract_markdown_images(text)
 
-    # text = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
-    # print(extract_markdown_links(text))
+def copy_directory_recursive(src, dst):
+    if not dst.exists():
+        dst.mkdir()
 
-    # node = TextNode(
-    # "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)",
-    # TextType.TEXT,)
-    # new_nodes = split_nodes_link([node])
+    for f in src.iterdir():
+        new_f = dst / f.name
+        if f.is_dir():
+            copy_directory_recursive(f, new_f)
+        else:
+            print(f"Copying {f} to {new_f}")
+            shutil.copy(f, new_f)
 
-    # text_to_textnodes("This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)")
 
-    block = '''
-    # This is a heading
-
-This is a paragraph of text. It has some **bold** and *italic* words inside of it.
-
-* This is the first list item in a list block
-* This is a list item
-* This is another list item
-    '''
-
-#     md = """
-# This is **bolded** paragraph
-# text in a p
-# tag here
-
-# """
-
-md = """
-# this is an h1
-
-this is paragraph text
-
-###### this is an h2
-"""
-    
-markdown_to_html_node(md)
 
 if __name__ == "__main__":
     main()
