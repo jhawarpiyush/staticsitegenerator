@@ -73,7 +73,7 @@ class ParentNode(HTMLNode):
         child_html = ""
         for child in self.children:
             child_html += child.to_html()
-        return f"<{self.tag}{html_props}>{child_html}<{self.tag}/>"
+        return f"<{self.tag}{html_props}>{child_html}</{self.tag}>"
     
     def __repr__(self):
         return f"ParentNode({self.tag}, {self.children}, {self.props})"
