@@ -63,12 +63,10 @@ def block_to_html_node(block):
 def heading_to_html_node(block):
     level = 0
     for char in block:
-        print(char)
         if char == "#":
             level += 1
         else:
             break
-        print(level)
     if level + 1 >= len(block):
         raise ValueError(f"Invalid heading level: {level}")
     text = block[level + 1:]

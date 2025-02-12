@@ -3,7 +3,6 @@ import re
 
 from textnode import TextType, TextNode
 
-
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     new_list = []
 
@@ -44,15 +43,16 @@ def split_nodes_image(old_nodes):
             new_list.append(node)
             continue
         for img in images:
-            split_text = node.text.split(f"[{img[0]}]({img[1]})", 1)
+            split_text = node.text.split(f"![{img[0]}]({img[1]})", 1)
             if len(split_text) != 2:
                 raise ValueError("invalid markdown image not closed")
             if split_text[0]:
                 new_list.append(TextNode(split_text[0], node.text_type))
             new_list.append(TextNode(img[0], TextType.IMAGE, img[1]))
             node.text = split_text[1]
+        if node.text:
+            new_list.append(TextNode(node.text, TextType.TEXT))
     return new_list
-
 
 def split_nodes_link(old_nodes):
     new_list = []
@@ -72,6 +72,8 @@ def split_nodes_link(old_nodes):
                 new_list.append(TextNode(split_text[0], node.text_type))
             new_list.append(TextNode(link[0], TextType.LINK, link[1]))
             node.text = split_text[1]
+        if node.text:
+            new_list.append(TextNode(node.text, TextType.TEXT))
     return new_list
 
 
