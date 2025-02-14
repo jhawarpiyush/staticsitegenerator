@@ -2,7 +2,7 @@ from pathlib import Path
 import os
 import shutil
 
-from generate_page import generate_page
+from generate_page import generate_page, generate_pages_recursive
 
 
 def main():
@@ -14,11 +14,17 @@ def main():
         shutil.rmtree(public_dir_path)
     copy_directory_recursive(static_dir_path, public_dir_path)
 
-    from_path = project_root / "content/index.md"
-    template_path = project_root / "template.html"
-    dest_path = project_root / "public/index.html"
+    # from_path = project_root / "content/index.md"
+    # template_path = project_root / "template.html"
+    # dest_path = project_root / "public/index.html"
 
-    generate_page(from_path, template_path, dest_path)
+    # generate_page(from_path, template_path, dest_path)
+
+    dir_path_content = project_root / "content"
+    template_path = project_root / "template.html"
+    dest_dir_path = project_root / "public"
+
+    generate_pages_recursive(dir_path_content, template_path, dest_dir_path)
 
 
 def copy_directory_recursive(src, dst):
